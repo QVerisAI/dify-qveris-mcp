@@ -43,6 +43,15 @@ discover -> inspect -> probe -> call -> usage_history / credits_ledger
 
 在 `call` 前应向用户展示能力与价格信息，并使用 Inspect 返回的当前 schema 构造参数。
 
+## 扣子等表单式 MCP 客户端
+
+`probe` 和 `call` 支持两种互斥的能力参数传法：
+
+- `parameters`：标准的自由 JSON 对象，普通 MCP 客户端应优先使用。
+- `parameters_json`：JSON 文本兼容入口，适用于无法在表单中渲染自由对象输入框的扣子插件调试器等客户端。
+
+网关会校验并把 `parameters_json` 转换为标准 `parameters` 对象，不会把兼容字段传给 QVeris。每次调用只能填写其中一种。
+
 ## 安全限制
 
 - 插件只向固定地址 `https://qveris.ai/api/v1` 发起 HTTPS 请求，并拒绝跳转。

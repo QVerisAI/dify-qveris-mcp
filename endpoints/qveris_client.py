@@ -43,12 +43,12 @@ class QVerisClient:
 
     def probe(self, arguments: Mapping[str, Any]) -> Any:
         tool_id = _required_string(arguments, "tool_id")
-        body = {key: value for key, value in arguments.items() if key != "tool_id"}
+        body = _parameter_body(arguments)
         return self._request("POST", "/tools/probe", query={"tool_id": tool_id}, body=body)
 
     def call(self, arguments: Mapping[str, Any]) -> Any:
         tool_id = _required_string(arguments, "tool_id")
-        body = {key: value for key, value in arguments.items() if key != "tool_id"}
+        body = _parameter_body(arguments)
         return self._request("POST", "/tools/execute", query={"tool_id": tool_id}, body=body)
 
     def usage_history(self, arguments: Mapping[str, Any]) -> Any:
@@ -108,6 +108,37 @@ def _required_string(arguments: Mapping[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise QVerisError(f"Missing or invalid required parameter: {key}")
     return value
+
+
+def _parameter_body(arguments: Mapping[str, Any]) -> dict[str, Any]:
+    body = {
+        key: value
+        for key, value in arguments.items()
+        if key not in {"tool_id", "parameters_json"}
+    }
+    has_object = "parameters" in arguments
+    has_json = "parameters_json" in arguments
+    if not has_object and not has_json:
+        raise QVerisError("Missing required parameter: parameters or parameters_json")
+    if has_object and has_json:
+        raise QVerisError("Provide exactly one of parameters or parameters_json")
+    if has_object:
+        if not isinstance(arguments.get("parameters"), Mapping):
+            raise QVerisError("parameters must be an object")
+        body["parameters"] = dict(arguments["parameters"])
+        return body
+
+    encoded = arguments.get("parameters_json")
+    if not isinstance(encoded, str) or not encoded.strip():
+        raise QVerisError("parameters_json must be a non-empty JSON string")
+    try:
+        decoded = json.loads(encoded)
+    except json.JSONDecodeError as exc:
+        raise QVerisError("parameters_json must contain valid JSON") from exc
+    if not isinstance(decoded, Mapping):
+        raise QVerisError("parameters_json must encode a JSON object")
+    body["parameters"] = dict(decoded)
+    return body
 
 
 def _normalize_query(query: Mapping[str, Any]) -> dict[str, Any]:

@@ -64,7 +64,17 @@ TOOLS: list[dict[str, Any]] = [
             "type": "object",
             "properties": {
                 "tool_id": {"type": "string", "minLength": 1},
-                "parameters": {"type": "object"},
+                "parameters": {
+                    "type": "object",
+                    "description": "Candidate parameters as a JSON object. Preferred for standard MCP clients.",
+                },
+                "parameters_json": {
+                    "type": "string",
+                    "description": (
+                        "JSON-text fallback for clients that cannot render free-form object inputs. "
+                        "Use instead of parameters. Example: {\"city\":\"Beijing\"}"
+                    ),
+                },
                 "checks": {
                     "type": "array",
                     "items": {"type": "string", "enum": ["schema", "quote", "coverage", "sample"]},
@@ -72,7 +82,7 @@ TOOLS: list[dict[str, Any]] = [
                 },
                 "live_budget": {"type": "string", "enum": ["none"], "default": "none"},
             },
-            "required": ["tool_id", "parameters"],
+            "required": ["tool_id"],
             "additionalProperties": False,
         },
     },
@@ -86,7 +96,17 @@ TOOLS: list[dict[str, Any]] = [
             "type": "object",
             "properties": {
                 "tool_id": {"type": "string", "minLength": 1},
-                "parameters": {"type": "object"},
+                "parameters": {
+                    "type": "object",
+                    "description": "Capability parameters as a JSON object. Preferred for standard MCP clients.",
+                },
+                "parameters_json": {
+                    "type": "string",
+                    "description": (
+                        "JSON-text fallback for clients that cannot render free-form object inputs. "
+                        "Use instead of parameters. Example: {\"city\":\"Beijing\"}"
+                    ),
+                },
                 "search_id": {"type": "string"},
                 "session_id": {"type": "string"},
                 "model": {"type": "string", "maxLength": 128},
@@ -96,7 +116,7 @@ TOOLS: list[dict[str, Any]] = [
                     "description": "full, summary, or fields:<JSONPath,...>",
                 },
             },
-            "required": ["tool_id", "parameters"],
+            "required": ["tool_id"],
             "additionalProperties": False,
         },
     },
@@ -246,8 +266,8 @@ def _validate_required_arguments(name: str, arguments: Mapping[str, Any]) -> str
     required: dict[str, tuple[str, ...]] = {
         "discover": ("query",),
         "inspect": ("tool_ids",),
-        "probe": ("tool_id", "parameters"),
-        "call": ("tool_id", "parameters"),
+        "probe": ("tool_id",),
+        "call": ("tool_id",),
     }
     missing = [key for key in required.get(name, ()) if key not in arguments]
     if missing:
@@ -258,8 +278,25 @@ def _validate_required_arguments(name: str, arguments: Mapping[str, Any]) -> str
         tool_ids = arguments.get("tool_ids")
         if not isinstance(tool_ids, list) or not tool_ids:
             return "tool_ids must be a non-empty array"
-    if name in {"probe", "call"} and not isinstance(arguments.get("parameters"), Mapping):
-        return "parameters must be an object"
+    if name in {"probe", "call"}:
+        has_object = "parameters" in arguments
+        has_json = "parameters_json" in arguments
+        if not has_object and not has_json:
+            return "Missing required parameters: parameters or parameters_json"
+        if has_object and has_json:
+            return "Provide exactly one of parameters or parameters_json"
+        if has_object and not isinstance(arguments.get("parameters"), Mapping):
+            return "parameters must be an object"
+        if has_json:
+            encoded = arguments.get("parameters_json")
+            if not isinstance(encoded, str) or not encoded.strip():
+                return "parameters_json must be a non-empty JSON string"
+            try:
+                decoded = json.loads(encoded)
+            except json.JSONDecodeError:
+                return "parameters_json must contain valid JSON"
+            if not isinstance(decoded, Mapping):
+                return "parameters_json must encode a JSON object"
     return None
 
 

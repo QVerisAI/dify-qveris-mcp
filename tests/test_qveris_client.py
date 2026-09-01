@@ -33,6 +33,46 @@ def test_call_sends_key_only_in_authorization_header_and_encodes_tool_id(request
 
 
 @patch("endpoints.qveris_client.requests.request")
+def test_call_decodes_json_text_fallback_before_upstream_request(request):
+    request.return_value = response(200, {"success": True})
+    client = QVerisClient("secret-key")
+
+    client.call(
+        {
+            "tool_id": "provider/tool",
+            "parameters_json": '{"city":"Beijing","units":"metric"}',
+            "search_id": "search-123",
+        }
+    )
+
+    assert request.call_args.kwargs["json"] == {
+        "parameters": {"city": "Beijing", "units": "metric"},
+        "search_id": "search-123",
+    }
+
+
+@patch("endpoints.qveris_client.requests.request")
+def test_probe_decodes_empty_json_object_fallback(request):
+    request.return_value = response(200, {"schema": {"valid": True}})
+
+    QVerisClient("secret-key").probe(
+        {"tool_id": "provider/tool", "parameters_json": "{}"}
+    )
+
+    assert request.call_args.kwargs["json"] == {"parameters": {}}
+
+
+@pytest.mark.parametrize("encoded", ["not-json", "[]", "null"])
+def test_call_rejects_invalid_json_text_fallback_without_network(encoded):
+    with patch("endpoints.qveris_client.requests.request") as request:
+        with pytest.raises(QVerisError, match="parameters_json"):
+            QVerisClient("secret-key").call(
+                {"tool_id": "provider/tool", "parameters_json": encoded}
+            )
+        request.assert_not_called()
+
+
+@patch("endpoints.qveris_client.requests.request")
 def test_boolean_query_values_are_lowercase(request):
     request.return_value = response(200, {"data": {"items": []}})
     QVerisClient("secret-key").usage_history({"summary": True, "success": False})

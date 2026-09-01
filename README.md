@@ -19,6 +19,15 @@ QVeris MCP Gateway is a Dify Extension plugin that exposes six QVeris operations
 
 Use the safe sequence `discover -> inspect -> probe -> call`. Show the selected capability's pricing information before calling it, then use `usage_history` or `credits_ledger` for final settlement details.
 
+### Form-based MCP clients
+
+`probe` and `call` accept capability parameters in either of two forms:
+
+- `parameters`: the standard free-form JSON object, preferred for normal MCP clients.
+- `parameters_json`: a JSON-encoded string fallback for clients whose forms cannot render a free-form object input, including some Coze plugin debugger versions.
+
+Provide exactly one form. The gateway validates `parameters_json`, converts it to the canonical `parameters` object, and never forwards the compatibility field to QVeris.
+
 ## Requirements
 
 - Dify 1.3.0 or later
