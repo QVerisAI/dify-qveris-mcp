@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">QVeris MCP Gateway</title>
+  <defs>
+    <linearGradient id="background" x1="12" y1="12" x2="116" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5DFB"/>
+      <stop offset="1" stop-color="#16C7B7"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#background)"/>
+  <path fill="#fff" d="M64 25c-21.54 0-39 17.46-39 39s17.46 39 39 39c7.31 0 14.14-2.01 19.99-5.51L94.5 108l9.5-9.5-10.16-10.16A38.84 38.84 0 0 0 103 64c0-21.54-17.46-39-39-39Zm0 15c13.25 0 24 10.75 24 24a23.9 23.9 0 0 1-4.88 14.49L75.5 70.87 66 80.37l6.75 6.75A23.91 23.91 0 0 1 64 88c-13.25 0-24-10.75-24-24s10.75-24 24-24Z"/>
+  <circle cx="64" cy="64" r="8" fill="#fff"/>
+</svg>

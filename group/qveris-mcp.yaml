@@ -1,0 +1,31 @@
+settings:
+  - name: qveris_api_key
+    type: secret-input
+    required: true
+    label:
+      en_US: QVeris API Key
+      zh_Hans: QVeris API Key
+    placeholder:
+      en_US: Enter your QVeris API key
+      zh_Hans: 输入 QVeris API Key
+    help:
+      en_US: Create an API key in your QVeris account.
+      zh_Hans: 在 QVeris 账户中创建 API Key。
+    url: https://qveris.ai/account?page=api-keys
+  - name: endpoint_bearer_token
+    type: secret-input
+    required: true
+    label:
+      en_US: Endpoint Bearer Token
+      zh_Hans: Endpoint 访问令牌
+    placeholder:
+      en_US: Create a strong token for MCP clients
+      zh_Hans: 创建一个供 MCP 客户端使用的高强度访问令牌
+    help:
+      en_US: MCP clients must send this token in the Authorization header.
+      zh_Hans: MCP 客户端必须在 Authorization 请求头中发送此令牌。
+endpoints:
+  - endpoints/mcp_post.yaml
+  - endpoints/mcp_get.yaml
+  - endpoints/mcp_delete.yaml
+  - endpoints/mcp_options.yaml

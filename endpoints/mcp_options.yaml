@@ -1,0 +1,5 @@
+path: /mcp
+method: OPTIONS
+extra:
+  python:
+    source: endpoints/mcp_options.py
