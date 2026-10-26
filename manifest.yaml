@@ -1,6 +1,7 @@
 version: 0.1.0
 type: plugin
 author: qverisai
+contact: contact@qveris.ai
 name: qveris-mcp
 label:
   en_US: QVeris MCP Gateway
