@@ -85,17 +85,17 @@ Package with the current Dify plugin CLI:
 dify-plugin plugin package ./dify-qveris-mcp
 ```
 
-The expected package name for Marketplace submission is `qveris-mcp-0.1.0.difypkg`.
+The expected package name for Marketplace submission is `qveris-mcp-0.1.1.difypkg`.
 
 ## Marketplace submission
 
 Submit exactly one package file to the official `langgenius/dify-plugins` repository at:
 
 ```text
-qverisai/qveris-mcp/qveris-mcp-0.1.0.difypkg
+qverisai/qveris-mcp/qveris-mcp-0.1.1.difypkg
 ```
 
-Use an English PR title such as `feat: add QVeris MCP Gateway 0.1.0`, select **New plugin** and **High risk**, and disclose that the plugin is a broad capability gateway that can process sensitive queries and make billable calls.
+Use an English PR title such as `fix: update QVeris MCP Gateway 0.1.1 official logo`, select **Version update** and **High risk**, and disclose that the plugin is a broad capability gateway that can process sensitive queries and make billable calls.
 
 ## Support
 

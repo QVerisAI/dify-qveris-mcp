@@ -78,7 +78,7 @@ class QVerisClient:
                     "Authorization": f"Bearer {self._api_key}",
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "User-Agent": "qveris-dify-mcp/0.1.0",
+                    "User-Agent": "qveris-dify-mcp/0.1.1",
                 },
                 json=body if method == "POST" else None,
                 timeout=(CONNECT_TIMEOUT_SECONDS, READ_TIMEOUT_SECONDS),

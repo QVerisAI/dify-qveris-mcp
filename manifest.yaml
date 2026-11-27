@@ -1,4 +1,4 @@
-version: 0.1.0
+version: 0.1.1
 type: plugin
 author: qverisai
 contact: contact@qveris.ai
@@ -9,7 +9,7 @@ label:
 description:
   en_US: Expose QVeris capabilities through a Dify-hosted MCP endpoint.
   zh_Hans: 通过 Dify 托管的 MCP Endpoint 提供 QVeris 能力。
-icon: icon.svg
+icon: icon.png
 resource:
   memory: 268435456
   permission:
