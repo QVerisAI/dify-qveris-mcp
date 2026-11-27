@@ -8,7 +8,7 @@ from .common import jsonrpc_error
 from .qveris_client import QVerisClient, QVerisError
 
 
-SERVER_INFO = {"name": "qveris-mcp-gateway", "version": "0.1.0"}
+SERVER_INFO = {"name": "qveris-mcp-gateway", "version": "0.1.1"}
 
 
 TOOLS: list[dict[str, Any]] = [

@@ -1,6 +1,6 @@
 [project]
 name = "dify-qveris-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "QVeris MCP Gateway extension for Dify"
 requires-python = ">=3.12,<3.13"
 license = "MIT"
